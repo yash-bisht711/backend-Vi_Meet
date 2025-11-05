@@ -35,6 +35,20 @@ app.use("/api/chat", chatRoutes);
 app.use("/api/meetings", meetingRoutes);
 
 app.get("/", (_req, res) => res.send("Video Chat Backend Running..."));
+app.get("/test-email", async (req, res) => {
+  try {
+    await transporter.sendMail({
+      from: process.env.BREVO_USER,
+      to: "your_email@gmail.com",
+      subject: "✅ Brevo SMTP Working!",
+      text: "Your backend can now send emails successfully!"
+    });
+    res.send("✅ Email Sent Successfully!");
+  } catch (error) {
+    console.log(error);
+    res.send("❌ Failed to send email");
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
