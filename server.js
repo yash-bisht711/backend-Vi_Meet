@@ -1,7 +1,7 @@
 const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
-const cors = require("cors");
+//const cors = require("cors");
 
 const roomRoutes = require("./routes/roomRoutes");
 const protectedRoutes = require("./routes/protectedRoutes");
@@ -11,7 +11,18 @@ const meetingRoutes = require("./routes/meetingRoutes");
 const initSocket = require("./socket");
 const connectDB = require("./config/db")
 const app = express();
-app.use(cors({ origin: true, credentials: true }));
+//app.use(cors({ origin: true, credentials: true }));
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://vi-meet-1c0480.netlify.app"
+];
+
+app.use(require("cors")({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
 app.use(express.json());
 
 connectDB()

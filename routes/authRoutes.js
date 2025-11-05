@@ -515,7 +515,7 @@ router.post("/forgot-password", async (req, res) => {
     if (!user) return res.status(404).json({ msg: "User not found" });
 
     const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
-    const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+    const resetLink = `https://vi-meet-1c0480.netlify.app/reset-password/${resetToken}`;
 
     await transporter.sendMail({
       from: `"Meeting App" <${process.env.GOOGLE_APP_EMAIL}>`,
