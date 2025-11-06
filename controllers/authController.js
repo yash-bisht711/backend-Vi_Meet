@@ -1,234 +1,370 @@
-// const bcrypt = require("bcryptjs"); // you can also use 'bcrypt' (native)
-// const jwt = require("jsonwebtoken");
-// const User = require("../models/User");
-// const nodemailer = require("nodemailer");
+// // const bcrypt = require("bcryptjs"); // you can also use 'bcrypt' (native)
+// // const jwt = require("jsonwebtoken");
+// // const User = require("../models/User");
+// // const nodemailer = require("nodemailer");
 
-// const JWT_SECRET = process.env.JWT_SECRET || "supersecretjwt";
+// // const JWT_SECRET = process.env.JWT_SECRET || "supersecretjwt";
 
-// // ✅ Utility: create JWT
-// const createToken = (user) =>
-//   jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-//     expiresIn: "1d",
-//   });
+// // // ✅ Utility: create JWT
+// // const createToken = (user) =>
+// //   jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+// //     expiresIn: "1d",
+// //   });
 
-// // ------------------ SIGNUP ------------------
+// // // ------------------ SIGNUP ------------------
+// // // exports.signup = async (req, res) => {
+// // //   try {
+// // //     let { name, email, password } = req.body;
+
+// // //     if (!name || !email || !password) {
+// // //       return res.status(400).json({ message: "All fields are required" });
+// // //     }
+
+// // //     email = email.trim().toLowerCase();
+// // //     const existingUser = await User.findOne({ email });
+// // //     if (existingUser) {
+// // //       return res.status(400).json({ message: "User already exists" });
+// // //     }
+
+// // //     const hashedPassword = await bcrypt.hash(password, 10);
+// // //     const user = new User({
+// // //       name,
+// // //       email,
+// // //       password: hashedPassword,
+// // //     });
+// // //     await user.save();
+
+// // //     const token = createToken(user);
+// // //     res.status(201).json({
+// // //       token,
+// // //       user: { id: user._id, name: user.name, email: user.email },
+// // //     });
+// // //   } catch (err) {
+// // //     console.error("Signup error:", err);
+// // //     res.status(500).json({ error: err.message || "Server error" });
+// // //   }
+// // // };
+
 // // exports.signup = async (req, res) => {
 // //   try {
-// //     let { name, email, password } = req.body;
+// //     const { name, email, password } = req.body;
 
-// //     if (!name || !email || !password) {
-// //       return res.status(400).json({ message: "All fields are required" });
-// //     }
+// //     let user = await User.findOne({ email });
+// //     if (user) return res.status(400).json({ msg: "User already exists" });
 
-// //     email = email.trim().toLowerCase();
-// //     const existingUser = await User.findOne({ email });
-// //     if (existingUser) {
-// //       return res.status(400).json({ message: "User already exists" });
-// //     }
-
+// //     // hash password before saving
 // //     const hashedPassword = await bcrypt.hash(password, 10);
-// //     const user = new User({
+// //     console.log(await bcrypt.compare(password,hashedPassword))
+// //     user = new User({
 // //       name,
 // //       email,
 // //       password: hashedPassword,
 // //     });
+
 // //     await user.save();
 
-// //     const token = createToken(user);
-// //     res.status(201).json({
-// //       token,
-// //       user: { id: user._id, name: user.name, email: user.email },
+// //     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+// //       expiresIn: "1h",
 // //     });
-// //   } catch (err) {
-// //     console.error("Signup error:", err);
-// //     res.status(500).json({ error: err.message || "Server error" });
-// //   }
-// // };
-
-// exports.signup = async (req, res) => {
-//   try {
-//     const { name, email, password } = req.body;
-
-//     let user = await User.findOne({ email });
-//     if (user) return res.status(400).json({ msg: "User already exists" });
-
-//     // hash password before saving
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     console.log(await bcrypt.compare(password,hashedPassword))
-//     user = new User({
-//       name,
-//       email,
-//       password: hashedPassword,
-//     });
-
-//     await user.save();
-
-//     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-//       expiresIn: "1h",
-//     });
-
-//     res.json({
-//       token,
-//       user: { id: user._id, name: user.name, email: user.email },
-//     });
-//   } catch (err) {
-//     res.status(500).json({ msg: err.message });
-//   }
-// };
-
-// // ------------------ LOGIN ------------------
-// // exports.login = async (req, res) => {
-// //   try {
-// //     const { email, password } = req.body;
-
-// //     if (!email?.trim() || !password) {
-// //       return res.status(400).json({ message: "Email and password required" });
-// //     }
-
-// //     const emailNew = email.trim().toLowerCase();
-// //     const user = await User.findOne({ email: emailNew });
-// //     console.log(email,password,user)
-// //     if (!user) {
-// //       return res.status(400).json({ message: "Invalid email credentials" });
-// //     }
-
-// //     // ✅ FIXED: plain password first, hashed password second
-// //     const match = await bcrypt.compare(password, user.password);
-// //     if (!match) {
-// //       return res.status(401).json({ msg: "Invalid credentials" });
-// //     }
-
-// //     const token = createToken(user);
 
 // //     res.json({
 // //       token,
 // //       user: { id: user._id, name: user.name, email: user.email },
 // //     });
 // //   } catch (err) {
-// //     console.error("Login error:", err);
+// //     res.status(500).json({ msg: err.message });
+// //   }
+// // };
+
+// // // ------------------ LOGIN ------------------
+// // // exports.login = async (req, res) => {
+// // //   try {
+// // //     const { email, password } = req.body;
+
+// // //     if (!email?.trim() || !password) {
+// // //       return res.status(400).json({ message: "Email and password required" });
+// // //     }
+
+// // //     const emailNew = email.trim().toLowerCase();
+// // //     const user = await User.findOne({ email: emailNew });
+// // //     console.log(email,password,user)
+// // //     if (!user) {
+// // //       return res.status(400).json({ message: "Invalid email credentials" });
+// // //     }
+
+// // //     // ✅ FIXED: plain password first, hashed password second
+// // //     const match = await bcrypt.compare(password, user.password);
+// // //     if (!match) {
+// // //       return res.status(401).json({ msg: "Invalid credentials" });
+// // //     }
+
+// // //     const token = createToken(user);
+
+// // //     res.json({
+// // //       token,
+// // //       user: { id: user._id, name: user.name, email: user.email },
+// // //     });
+// // //   } catch (err) {
+// // //     console.error("Login error:", err);
+// // //     res.status(500).json({ error: err.message || "Server error" });
+// // //   }
+// // // };
+
+// // exports.login = async (req, res) => {
+// //   try {
+// //     const { email, password } = req.body;
+
+// //     // check user
+// //     const user = await User.findOne({ email });
+// //     if (!user) return res.status(400).json({ msg: "Invalid credentials" });
+
+// //     // compare password
+// //     console.log("Entered Password:", password);
+// //     console.log("Stored Password (hashed):", user.password);
+// //     const isMatch = await bcrypt.compare(password, user.password);
+// //     console.log("isMatch:", isMatch);
+
+// //     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
+
+// //     // sign JWT
+// //     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+// //       expiresIn: "1h",
+// //     });
+
+// //     res.json({
+// //       token,
+// //       user: { id: user._id, name: user.name, email: user.email },
+// //     });
+// //   } catch (err) {
+// //     console.error(err);
+// //     res.status(500).json({ msg: "Server error" });
+// //   }
+// // };
+
+// // // ------------------ FORGOT PASSWORD ------------------
+// // exports.forgotPassword = async (req, res) => {
+// //   try {
+// //     const { email } = req.body;
+// //     if (!email?.trim()) {
+// //       return res.status(400).json({ message: "Email required" });
+// //     }
+
+// //     const user = await User.findOne({ email: email.trim().toLowerCase() });
+// //     if (!user) {
+// //       return res.status(400).json({ message: "No account with that email" });
+// //     }
+
+// //     const resetToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+// //       expiresIn: "15m",
+// //     });
+
+// //     // Example Nodemailer transporter (configure with real SMTP)
+// //     const transporter = nodemailer.createTransport({
+// //       service: "gmail",
+// //       auth: {
+// //         user: process.env.EMAIL_USER,
+// //         pass: process.env.EMAIL_PASS,
+// //       },
+// //     });
+
+// //     const resetUrl = `http://localhost:5173/reset-password?token=${resetToken}`;
+// //     await transporter.sendMail({
+// //       to: user.email,
+// //       subject: "Password Reset",
+// //       html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. Link expires in 15 minutes.</p>`,
+// //     });
+
+// //     res.json({ message: "Reset email sent" });
+// //   } catch (err) {
+// //     console.error("ForgotPassword error:", err);
 // //     res.status(500).json({ error: err.message || "Server error" });
 // //   }
 // // };
 
-// exports.login = async (req, res) => {
+// // // ------------------ RESET PASSWORD ------------------
+// // exports.resetPassword = async (req, res) => {
+// //   try {
+// //     const { token, newPassword } = req.body;
+// //     if (!token || !newPassword) {
+// //       return res.status(400).json({ message: "Token and password required" });
+// //     }
+
+// //     const decoded = jwt.verify(token, JWT_SECRET);
+// //     const user = await User.findById(decoded.id);
+// //     if (!user) {
+// //       return res.status(400).json({ message: "Invalid token" });
+// //     }
+
+// //     user.password = await bcrypt.hash(newPassword, 10);
+// //     await user.save();
+
+// //     res.json({ message: "Password reset successful" });
+// //   } catch (err) {
+// //     console.error("ResetPassword error:", err);
+// //     res.status(500).json({ error: err.message || "Server error" });
+// //   }
+// // };
+
+// // // ------------------ VERIFY TOKEN (Middleware) ------------------
+// // exports.verifyToken = (req, res, next) => {
+// //   const authHeader = req.headers["authorization"];
+// //   const token = authHeader && authHeader.split(" ")[1];
+// //   if (!token) return res.status(401).json({ message: "Access denied" });
+
+// //   try {
+// //     const decoded = jwt.verify(token, JWT_SECRET);
+// //     req.user = decoded; // attach user to request
+// //     next();
+// //   } catch (err) {
+// //     res.status(401).json({ message: "Invalid token" });
+// //   }
+// // };
+
+// const User = require("../models/User");
+// const bcrypt = require("bcryptjs");
+// const jwt = require("jsonwebtoken");
+// const transporter = require("../config/nodemailer");
+
+// require("dotenv").config();
+// const JWT_SECRET = process.env.JWT_SECRET;
+// const FRONTEND_URL = process.env.FRONTEND_URL;
+// const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS) || 10;
+
+// // ---------------- SIGNUP ----------------
+// exports.signup = async (req, res) => {
 //   try {
-//     const { email, password } = req.body;
+//     let { name, email, password } = req.body;
+//     if (!name || !email || !password)
+//       return res.status(400).json({ msg: "All fields are required" });
 
-//     // check user
-//     const user = await User.findOne({ email });
-//     if (!user) return res.status(400).json({ msg: "Invalid credentials" });
+//     email = email.trim().toLowerCase();
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) return res.status(400).json({ msg: "User already exists" });
 
-//     // compare password
-//     console.log("Entered Password:", password);
-//     console.log("Stored Password (hashed):", user.password);
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     console.log("isMatch:", isMatch);
+//     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+//     const user = await User.create({ name, email, password: hashedPassword });
 
-//     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
+//     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: "1d" });
 
-//     // sign JWT
-//     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-//       expiresIn: "1h",
-//     });
+//     // Send welcome email
+//     try {
+//       await transporter.sendMail({
+//         from: `"VideoChat" <${process.env.BREVO_USER}>`,
+//         to: user.email,
+//         subject: "Welcome to VideoChat 🎉",
+//         html: `<h2>Welcome, ${user.name}!</h2>
+//                <p>Your account has been created successfully. Enjoy VideoChat 🚀</p>`
+//       });
+//     } catch (err) {
+//       console.error("Signup email error:", err.message);
+//     }
 
-//     res.json({
-//       token,
-//       user: { id: user._id, name: user.name, email: user.email },
-//     });
+//     res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email } });
+
 //   } catch (err) {
 //     console.error(err);
 //     res.status(500).json({ msg: "Server error" });
 //   }
 // };
 
-// // ------------------ FORGOT PASSWORD ------------------
-// exports.forgotPassword = async (req, res) => {
+// // ---------------- LOGIN ----------------
+// exports.login = async (req, res) => {
 //   try {
-//     const { email } = req.body;
-//     if (!email?.trim()) {
-//       return res.status(400).json({ message: "Email required" });
-//     }
+//     let { email, password } = req.body;
+//     if (!email || !password)
+//       return res.status(400).json({ msg: "Email and password required" });
 
-//     const user = await User.findOne({ email: email.trim().toLowerCase() });
-//     if (!user) {
-//       return res.status(400).json({ message: "No account with that email" });
-//     }
+//     email = email.trim().toLowerCase();
+//     const user = await User.findOne({ email });
+//     if (!user) return res.status(401).json({ msg: "Invalid credentials" });
 
-//     const resetToken = jwt.sign({ id: user._id }, JWT_SECRET, {
-//       expiresIn: "15m",
-//     });
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) return res.status(401).json({ msg: "Invalid credentials" });
 
-//     // Example Nodemailer transporter (configure with real SMTP)
-//     const transporter = nodemailer.createTransport({
-//       service: "gmail",
-//       auth: {
-//         user: process.env.EMAIL_USER,
-//         pass: process.env.EMAIL_PASS,
-//       },
-//     });
+//     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: "1d" });
+//     res.status(200).json({ token, user: { id: user._id, name: user.name, email: user.email } });
 
-//     const resetUrl = `http://localhost:5173/reset-password?token=${resetToken}`;
-//     await transporter.sendMail({
-//       to: user.email,
-//       subject: "Password Reset",
-//       html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. Link expires in 15 minutes.</p>`,
-//     });
-
-//     res.json({ message: "Reset email sent" });
 //   } catch (err) {
-//     console.error("ForgotPassword error:", err);
-//     res.status(500).json({ error: err.message || "Server error" });
+//     console.error(err);
+//     res.status(500).json({ msg: "Server error" });
 //   }
 // };
 
-// // ------------------ RESET PASSWORD ------------------
+// // ---------------- FORGOT PASSWORD ----------------
+// exports.forgotPassword = async (req, res) => {
+//   try {
+//     let { email } = req.body;
+//     if (!email) return res.status(400).json({ msg: "Email required" });
+
+//     email = email.trim().toLowerCase();
+//     const user = await User.findOne({ email });
+//     if (!user) return res.json({ msg: "If the email exists, a reset link has been sent" });
+
+//     const resetToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "15m" });
+//     const resetLink = `${FRONTEND_URL}/reset-password/${resetToken}`;
+
+//     await transporter.sendMail({
+//       from: `"VideoChat" <${process.env.BREVO_USER}>`,
+//       to: user.email,
+//       subject: "Reset your password 🔑",
+//       html: `<p>Click the link to reset your password (valid for 15 min): <a href="${resetLink}">Reset Password</a></p>`
+//     });
+
+//     res.json({ msg: "If the email exists, a reset link has been sent" });
+
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ msg: "Server error" });
+//   }
+// };
+
+// // ---------------- RESET PASSWORD ----------------
 // exports.resetPassword = async (req, res) => {
 //   try {
-//     const { token, newPassword } = req.body;
-//     if (!token || !newPassword) {
-//       return res.status(400).json({ message: "Token and password required" });
-//     }
+//     const { token } = req.params;
+//     const { password } = req.body;
+
+//     if (!token || !password)
+//       return res.status(400).json({ msg: "Token and new password required" });
 
 //     const decoded = jwt.verify(token, JWT_SECRET);
 //     const user = await User.findById(decoded.id);
-//     if (!user) {
-//       return res.status(400).json({ message: "Invalid token" });
-//     }
+//     if (!user) return res.status(404).json({ msg: "User not found" });
 
-//     user.password = await bcrypt.hash(newPassword, 10);
+//     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+//     user.password = hashedPassword;
 //     await user.save();
 
-//     res.json({ message: "Password reset successful" });
-//   } catch (err) {
-//     console.error("ResetPassword error:", err);
-//     res.status(500).json({ error: err.message || "Server error" });
-//   }
-// };
+//     res.status(200).json({ msg: "Password reset successfully" });
 
-// // ------------------ VERIFY TOKEN (Middleware) ------------------
-// exports.verifyToken = (req, res, next) => {
-//   const authHeader = req.headers["authorization"];
-//   const token = authHeader && authHeader.split(" ")[1];
-//   if (!token) return res.status(401).json({ message: "Access denied" });
-
-//   try {
-//     const decoded = jwt.verify(token, JWT_SECRET);
-//     req.user = decoded; // attach user to request
-//     next();
 //   } catch (err) {
-//     res.status(401).json({ message: "Invalid token" });
+//     console.error(err);
+//     res.status(400).json({ msg: "Invalid or expired token" });
 //   }
 // };
 
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const transporter = require("../config/nodemailer");
+const SibApiV3Sdk = require("sib-api-v3-sdk");
+const { brevoClient, gmailTransporter } = require("../config/emailClient");
 
 require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS) || 10;
+
+if (!process.env.BREVO_SMTP_KEY || !process.env.BREVO_USER) {
+  console.error("❌ Missing Brevo environment variables!");
+  process.exit(1);
+}
+if (!process.env.GOOGLE_APP_EMAIL || !process.env.GOOGLE_APP_PASSWORD) {
+  console.warn("⚠️ Gmail fallback env variables missing, fallback won't work!");
+}
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+const apiKey = defaultClient.authentications["api-key"];
+apiKey.apiKey = process.env.BREVO_SMTP_KEY;
+const emailClient = new SibApiV3Sdk.TransactionalEmailsApi();
 
 // ---------------- SIGNUP ----------------
 exports.signup = async (req, res) => {
@@ -239,28 +375,35 @@ exports.signup = async (req, res) => {
 
     email = email.trim().toLowerCase();
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ msg: "User already exists" });
+    if (existingUser)
+      return res.status(400).json({ msg: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     const user = await User.create({ name, email, password: hashedPassword });
 
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: "1d" });
+    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+      expiresIn: "1d",
+    });
 
-    // Send welcome email
+    // Send welcome email via Brevo API
     try {
-      await transporter.sendMail({
-        from: `"VideoChat" <${process.env.BREVO_USER}>`,
-        to: user.email,
+      await emailClient.sendTransacEmail({
+        sender: { name: "VideoChat", email: process.env.BREVO_USER },
+        to: [{ email: user.email, name: user.name }],
         subject: "Welcome to VideoChat 🎉",
-        html: `<h2>Welcome, ${user.name}!</h2>
-               <p>Your account has been created successfully. Enjoy VideoChat 🚀</p>`
+        htmlContent: `<h2>Welcome, ${user.name}!</h2>
+                        <p>Your account has been created successfully. Enjoy VideoChat 🚀</p>`,
       });
     } catch (err) {
       console.error("Signup email error:", err.message);
     }
 
-    res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email } });
-
+    res
+      .status(201)
+      .json({
+        token,
+        user: { id: user._id, name: user.name, email: user.email },
+      });
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error" });
@@ -281,9 +424,15 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ msg: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: "1d" });
-    res.status(200).json({ token, user: { id: user._id, name: user.name, email: user.email } });
-
+    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+      expiresIn: "1d",
+    });
+    res
+      .status(200)
+      .json({
+        token,
+        user: { id: user._id, name: user.name, email: user.email },
+      });
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error" });
@@ -298,20 +447,66 @@ exports.forgotPassword = async (req, res) => {
 
     email = email.trim().toLowerCase();
     const user = await User.findOne({ email });
-    if (!user) return res.json({ msg: "If the email exists, a reset link has been sent" });
+    if (!user)
+      return res.json({
+        msg: "If the email exists, a reset link has been sent",
+      });
 
-    const resetToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "15m" });
+    const resetToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+      expiresIn: "15m",
+    });
     const resetLink = `${FRONTEND_URL}/reset-password/${resetToken}`;
 
-    await transporter.sendMail({
-      from: `"VideoChat" <${process.env.BREVO_USER}>`,
-      to: user.email,
+    // ----------- BREVO (Primary) -----------
+    const brevoMailData = new SibApiV3Sdk.SendSmtpEmail({
+      to: [{ email: user.email }],
+      sender: {
+        email: process.env.BREVO_USER,
+        name: process.env.EMAIL_FROM || "VideoChat",
+      },
       subject: "Reset your password 🔑",
-      html: `<p>Click the link to reset your password (valid for 15 min): <a href="${resetLink}">Reset Password</a></p>`
+      htmlContent: `
+        <h3>Password Reset Request</h3>
+        <p>Click below to reset your password (valid for 15 minutes):</p>
+        <a href="${resetLink}">Reset Password</a>
+      `,
     });
 
-    res.json({ msg: "If the email exists, a reset link has been sent" });
+    try {
+      await brevoClient.sendTransacEmail(brevoMailData);
+      console.log("✅ Password reset email sent via Brevo");
+      return res.json({ msg: "Reset link sent to your email." });
+    } catch (brevoErr) {
+      console.error("❌ Brevo failed, trying Gmail fallback...");
+    }
 
+    // ----------- GMAIL FALLBACK -----------
+    if (process.env.GOOGLE_APP_EMAIL && process.env.GOOGLE_APP_PASSWORD) {
+      try {
+        await gmailTransporter.sendMail({
+          from: `"${process.env.EMAIL_FROM || "VideoChat"}" <${
+            process.env.GOOGLE_APP_EMAIL
+          }>`,
+          to: user.email,
+          subject: "Reset your password 🔑",
+          html: `
+            <h3>Password Reset Request</h3>
+            <p>Click below to reset your password (valid for 15 minutes):</p>
+            <a href="${resetLink}">Reset Password</a>
+          `,
+        });
+
+        console.log("✅ Gmail fallback email sent!");
+        return res.json({ msg: "Reset link sent to your email." });
+      } catch (gmailErr) {
+        console.error("❌ Gmail fallback failed:", gmailErr.message);
+        return res
+          .status(500)
+          .json({ msg: "Failed to send password reset email." });
+      }
+    }
+
+    return res.status(500).json({ msg: "Email settings not configured" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error" });
@@ -336,12 +531,8 @@ exports.resetPassword = async (req, res) => {
     await user.save();
 
     res.status(200).json({ msg: "Password reset successfully" });
-
   } catch (err) {
     console.error(err);
     res.status(400).json({ msg: "Invalid or expired token" });
   }
 };
-
-
-

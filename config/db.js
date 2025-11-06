@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 require("dotenv").config()
 
+if (!process.env.MONGODB_URI) {
+  console.error("❌ Missing MONGODB_URI in .env");
+  process.exit(1);
+}
+
 const connectDB = async () => {
     try {
         await mongoose.connect(`${process.env.MONGODB_URI}`);
